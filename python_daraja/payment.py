@@ -7,11 +7,10 @@ CONSUMER_KEY: str = ""
 CONSUMER_SECRET: str = ""
 PASSKEY: str = ""
 SHORT_CODE: str = ""
-PRODUCTION: bool = False
 ACCOUNT_TYPE: str = ""
 
 
-def get_trans_type():
+def _get_trans_type():
     if ACCOUNT_TYPE is "PAYBILL":
         trans_type = "CustomerPayBillOnline"
     else:
@@ -19,7 +18,7 @@ def get_trans_type():
     return trans_type
 
 
-def get_password():
+def _get_password():
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     data_to_encode = SHORT_CODE + PASSKEY + timestamp
 
@@ -28,7 +27,7 @@ def get_password():
     return decode_password
 
 
-def get_access_token() -> str:
+def _get_access_token() -> str:
     url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
 
     encoded_creds = f"{CONSUMER_KEY}:{CONSUMER_SECRET}".encode('ascii')
@@ -56,14 +55,14 @@ def trigger_stk_push(phone_number: int, amount: int, callback_url: str, account_
 
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {get_access_token()}'
+        'Authorization': f'Bearer {_get_access_token()}'
     }
 
     payload = {
         "BusinessShortCode": int(SHORT_CODE),
-        "Password": {get_password()},
+        "Password": {_get_password()},
         "Timestamp": int(datetime.datetime.now().strftime('%Y%m%d%H%M%S')),
-        "TransactionType": get_trans_type(),
+        "TransactionType": _get_trans_type(),
         "Amount": amount,
         "PartyA": phone_number,
         "PartyB": int(SHORT_CODE),
@@ -88,11 +87,11 @@ def query_stk_push(checkout_request_id: str) -> dict:
 
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {get_access_token()}'
+        'Authorization': f'Bearer {_get_access_token()}'
     }
     payload = {
         "BusinessShortCode": int(SHORT_CODE),
-        "Password": get_password(),
+        "Password": _get_password(),
         "Timestamp": int(timestamp),
         "CheckoutRequestID": checkout_request_id,
     }
