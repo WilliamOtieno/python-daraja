@@ -11,7 +11,7 @@ ACCOUNT_TYPE: str = ""
 
 
 def _get_trans_type():
-    if ACCOUNT_TYPE is "PAYBILL":
+    if ACCOUNT_TYPE == "PAYBILL":
         trans_type = "CustomerPayBillOnline"
     else:
         trans_type = "CustomerBuyGoodsOnline"
