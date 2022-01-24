@@ -10,6 +10,11 @@ Python Wrapper for handling payment requests through the Daraja MPESA API
 
 ## Usage
 
+### Installation
+```sh
+pip install python-daraja
+```
+
 ### Initial Setup
 
 - Set the following constants first before proceeding
