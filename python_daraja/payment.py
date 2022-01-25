@@ -35,7 +35,7 @@ def _get_access_token() -> str:
 
     payload = {}
     headers = {
-        'Authorization': f'Basic {b64_creds}'
+        'Authorization': f"Basic {b64_creds.decode('utf-8')}"
     }
 
     response = requests.request("GET", url, headers=headers, data=payload)
