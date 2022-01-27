@@ -85,3 +85,8 @@ signifies otherwise.
 ### Remarks
  - Unfortunately as of the moment of release of this package, Safaricom has internal problems with other types of 
 transactions such as `C2B`. Maintainers of the project will work on implementing more features when the issues are addressed.
+
+
+
+[![Sponsor Python Daraja](https://cdn.buymeacoffee.com/buttons/default-red.png)](https://dashboard.flutterwave.com/donate/34m2kdigwskp)
+
