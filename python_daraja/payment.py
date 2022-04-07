@@ -60,7 +60,7 @@ def trigger_stk_push(phone_number: int, amount: int, callback_url: str, account_
 
     payload = {
         "BusinessShortCode": int(SHORT_CODE),
-        "Password": {_get_password()},
+        "Password": _get_password(),
         "Timestamp": int(datetime.datetime.now().strftime('%Y%m%d%H%M%S')),
         "TransactionType": _get_trans_type(),
         "Amount": amount,
@@ -83,7 +83,6 @@ def query_stk_push(checkout_request_id: str) -> dict:
     :param checkout_request_id: Acquired from the result of successful STK push payment
     :return: Python Dictionary with transaction info
     """
-    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
     headers = {
         'Content-Type': 'application/json',
@@ -92,9 +91,49 @@ def query_stk_push(checkout_request_id: str) -> dict:
     payload = {
         "BusinessShortCode": int(SHORT_CODE),
         "Password": _get_password(),
-        "Timestamp": int(timestamp),
+        "Timestamp": int(datetime.datetime.now().strftime('%Y%m%d%H%M%S')),
         "CheckoutRequestID": checkout_request_id,
     }
     response = requests.request("POST", 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query', headers=headers,
+                                data=payload)
+    return dict(response.json())
+
+
+# TODO: To be revisited
+def register_urls(confirmation_url: str, validation_url: str, response_type: str):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {_get_access_token()}'
+    }
+
+    payload = {
+        "ShortCode": SHORT_CODE,
+        "ResponseType": response_type,
+        "ConfirmationURL": confirmation_url,
+        "ValidationURL": validation_url,
+    }
+
+    response = requests.request("POST", 'https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl', headers=headers,
+                                data=payload)
+    return dict(response.json())
+
+
+# TODO: To be revisited
+def c2b_transaction(amount: int, customer_phone_number: str):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {_get_access_token()}'
+    }
+    payload = {
+        "ShortCode": int(SHORT_CODE),
+        "CommandID": _get_trans_type(),
+        "amount": amount,
+        "MSISDN": customer_phone_number,
+        "BillRefNumber": "examplepayment",
+    }
+    if _get_trans_type() == 'CustomerBuyGoodsOnline':
+        payload["BillRefNumber"] = ""
+
+    response = requests.request("POST", 'https://sandbox.safaricom.co.ke/mpesa/c2b/v1/simulate', headers=headers,
                                 data=payload)
     return dict(response.json())
