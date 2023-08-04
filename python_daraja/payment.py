@@ -73,7 +73,7 @@ def trigger_stk_push(phone_number: int, amount: int, callback_url: str, account_
     }
 
     response = requests.request("POST", 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
-                                headers=headers, data=payload)
+                                headers=headers, json=payload)
     return dict(response.json())
 
 
